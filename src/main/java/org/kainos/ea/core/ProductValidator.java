@@ -4,7 +4,7 @@ import org.kainos.ea.cli.ProductRequest;
 
 public class ProductValidator {
     public String isValidProduct(ProductRequest product) {
-        if(product.getProductName().length() > 50) {
+        if(product.getProductName().length() > 75) {
             return "Name greater than 50 characters";
         }
 
