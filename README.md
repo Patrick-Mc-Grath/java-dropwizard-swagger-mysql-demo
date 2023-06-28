@@ -7,6 +7,8 @@ How to start the true application
 1. Start application with `java -jar target/DropWizardDemo-1.0-SNAPSHOT.jar server config.yml`
 1. To check that your application is running enter url `http://localhost:8080`
 
+this is a change i am making to this file
+
 Health Check
 ---
 
