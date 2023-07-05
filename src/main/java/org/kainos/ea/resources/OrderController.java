@@ -51,7 +51,9 @@ public class OrderController {
     @Produces(MediaType.APPLICATION_JSON)
     public Response createProduct(OrderRequest order) {
         try {
-            return Response.status(orderService.createOrder(order)).build();
+            orderService.createOrder(order);
+
+            return Response.status(Response.Status.CREATED).build();
         } catch (FailedToCreateOrderException e) {
             System.err.println(e.getMessage());
 

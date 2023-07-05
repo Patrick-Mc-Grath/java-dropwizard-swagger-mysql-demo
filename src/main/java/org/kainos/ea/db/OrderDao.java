@@ -1,29 +1,28 @@
 package org.kainos.ea.db;
 
-import java.io.FileInputStream;
 import java.sql.*;
-import java.util.Date;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
-import org.kainos.ea.cli.Order;
-import org.kainos.ea.cli.OrderRequest;
-import org.kainos.ea.cli.ProductRequest;
+
+import org.kainos.ea.cli.*;
 
 public class OrderDao {
     private DatabaseConnector databaseConnector = new DatabaseConnector();
-    public List<Order> getAllOrders() throws SQLException {
+    public List<OrderResponse> getAllOrders() throws SQLException {
         Connection c = databaseConnector.getConnection();
             Statement st = c.createStatement();
 
-            ResultSet rs = st.executeQuery("SELECT OrderID, CustomerID, OrderDate FROM `Orders`");
+            ResultSet rs = st.executeQuery("SELECT OrderID, Name, OrderDate FROM `Orders` INNER JOIN Customer" +
+                    " USING(CustomerID)");
 
-            List<Order> orderList = new ArrayList<>();
+            List<OrderResponse> orderList = new ArrayList<>();
+            List<String> emptyList = new ArrayList<>();
 
             while (rs.next()) {
-                Order order = new Order(
+                OrderResponse order = new OrderResponse(
                         rs.getInt("OrderID"),
-                        rs.getInt("CustomerID"),
+                        rs.getString("Name"),
+                        emptyList,
                         rs.getDate("OrderDate")
                 );
 
@@ -33,18 +32,27 @@ public class OrderDao {
             return orderList;
     }
 
-    public Order getOrderByID(int id) throws SQLException {
+    public OrderResponse getOrderByID(int id) throws SQLException {
         Connection c = databaseConnector.getConnection();
         Statement st = c.createStatement();
 
-        ResultSet rs = st.executeQuery("SELECT OrderID, CustomerID, OrderDate FROM `Orders` " +
-                "WHERE OrderID = " + id);
+        ResultSet productQuery = st.executeQuery("SELECT Product_Name FROM OrderProducts INNER JOIN Product" +
+                " ON OrderProducts.ProductID = Product.Product_ID WHERE OrderID = " + id + ";");
 
+        List<String> productList = new ArrayList<>();
+
+        while(productQuery.next()) {
+            productList.add(productQuery.getString("Product_Name"));
+        }
+
+        ResultSet rs = st.executeQuery("SELECT OrderID, CustomerID, OrderDate, Name FROM `Orders` INNER JOIN Customer"
+                + " USING(CustomerID) WHERE OrderID = " + id + ";");
 
         while (rs.next()) {
-            return new Order(
+            return new OrderResponse(
                     rs.getInt("OrderID"),
-                    rs.getInt("CustomerID"),
+                    rs.getString("Name"),
+                    productList,
                     rs.getDate("OrderDate")
             );
         }
