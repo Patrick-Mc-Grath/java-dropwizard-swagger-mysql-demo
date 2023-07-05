@@ -51,7 +51,9 @@ public class ProductController {
     @Produces(MediaType.APPLICATION_JSON)
     public Response createProduct(ProductRequest product) {
         try {
-            return Response.status(productService.createProduct(product)).build();
+            productService.createProduct(product);
+
+            return Response.status(Response.Status.CREATED).build();
         } catch (FailedToCreateProductException e) {
             System.err.println(e.getMessage());
 

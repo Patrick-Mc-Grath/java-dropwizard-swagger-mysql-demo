@@ -33,7 +33,7 @@ public class ProductRequest {
 
     @JsonCreator
     public ProductRequest(
-            @JsonProperty("Name") String productName,
+            @JsonProperty("Product_Name") String productName,
             @JsonProperty("Description") String description,
             @JsonProperty("Price") double price) {
         this.productName = productName;

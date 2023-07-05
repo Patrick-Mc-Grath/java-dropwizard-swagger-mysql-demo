@@ -7,14 +7,13 @@ import org.kainos.ea.core.OrderValidator;
 
 import java.sql.SQLException;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class OrderService {
     private OrderDao orderDao = new OrderDao();
     private OrderValidator orderValidator = new OrderValidator();
-    public List<Order> getAllOrders() throws FailedToGetOrdersException {
+    public List<OrderResponse> getAllOrders() throws FailedToGetOrdersException {
         try {
-            List<Order> orderList = orderDao.getAllOrders();
+            List<OrderResponse> orderList = orderDao.getAllOrders();
 
             /*Prints all orders sorted by orderDate
             System.out.println("All orders sorted by dispatch date: ");
@@ -59,9 +58,9 @@ public class OrderService {
         }
     }
 
-    public Order getOrderByID(int id) throws FailedToGetOrdersException, OrderDoesNotExistException {
+    public OrderResponse getOrderByID(int id) throws FailedToGetOrdersException, OrderDoesNotExistException {
         try {
-            Order order = orderDao.getOrderByID(id);
+            OrderResponse order = orderDao.getOrderByID(id);
 
             if(order == null){
                 throw new OrderDoesNotExistException();
@@ -101,7 +100,7 @@ public class OrderService {
                 throw new InvalidOrderException(validation);
             }
 
-            Order orderToUpdate = orderDao.getOrderByID(id);
+            OrderResponse orderToUpdate = orderDao.getOrderByID(id);
 
             if(orderToUpdate == null){
                 throw new OrderDoesNotExistException();
